@@ -25,7 +25,7 @@ const event: BotEvent = {
       }
     }
 
-    // Check if the emoji is the one we want
+    // Check if the emoji is the one we want (TODO: This should be customizable)
     if (reaction.emoji.id !== '1079571995160744007') return;
 
     // Get the user who reacted
@@ -33,8 +33,8 @@ const event: BotEvent = {
     const member = await reaction.message.guild.members.fetch(user.id);
     if (!member) return;
 
-    // Check if the user has the role Admin
-    if (!member.permissions.has('972596676227366972')) return;
+    // Check if the user has the role Admin and Lead (TODO: This should be customizable)
+    if (!member.roles.cache.has('972596676227366972') || member.roles.cache.has('1080686668383793182')) return;
 
     // Update or Create User
     await api.user.sendCoinsByUserId.mutate({
