@@ -12,6 +12,12 @@
       "receiver": "The receiver's username",
       "amount": "Set the amount of coins you want to give.",
       "giveSuccess": "You gave :amount IndieTokens to :user"
+    },
+    "pay": {
+      "description": "Pay a User with Indie Tokens",
+      "receiver": "The receiver's username",
+      "amount": "Set the amount of coins you want to pay.",
+      "giveSuccess": "You gave :amount IndieTokens to :user"
     }
   }
 }

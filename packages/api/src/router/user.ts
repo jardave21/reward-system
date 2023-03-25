@@ -29,6 +29,53 @@ export const userRouter = createTRPCRouter({
     return ctx.prisma.user.findMany();
   }),
 
+  substractCoinsByUserId: publicProcedure
+    .input(
+      z.object({
+        user: z.object({
+          id: z.string(),
+        }),
+        coins: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        // Check if user has enough coins
+        const userCoins = await ctx.prisma.user.findUnique({
+          where: { discordId: input.user.id },
+          select: { coins: true },
+        });
+
+        if (userCoins! || userCoins === 0) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'User does not have enough coins',
+          });
+        }
+
+        const user: User = await ctx.prisma.user.update({
+          where: { discordId: input.user.id },
+          data: { coins: { decrement: input.coins } },
+        });
+
+        if (!user) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'User with that ID not found',
+          });
+        }
+
+        return {
+          status: 'success',
+          data: {
+            user,
+          },
+        };
+      } catch (err: any) {
+        throw err;
+      }
+    }),
+
   sendCoinsByUserId: publicProcedure
     .input(
       z.object({
